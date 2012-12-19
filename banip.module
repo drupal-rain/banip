@@ -22,7 +22,7 @@ function banip_is_banned($ip) {
    $banned = FALSE;
    // Ban it if comes from Guangdong.
    if ($info->code == 0) {
-     if ($info->data->region_id == 440000) {
+     if ($info->data->region_id == "440000") {
        $banned = TRUE;
      }
    }
