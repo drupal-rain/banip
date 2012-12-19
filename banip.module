@@ -1,0 +1,43 @@
+<?php
+/**
+ * @file
+ * Module file of banip.
+ */
+
+/**
+ * Implements hook_boot().
+ */
+function banip_boot() {
+  if (banip_is_banned(ip_address())) {
+    exit();
+  }
+}
+
+/**
+ * Check if the ip should be banned. 
+ */
+function banip_is_banned($ip) {
+   $info = banip_ip_lookup($ip);
+   //var_dump($info);
+   $banned = FALSE;
+   // Ban it if comes from Guangdong.
+   if ($info->code == 0) {
+     if ($info->data->region_id == 440000) {
+       $banned = TRUE;
+     }
+   }
+   else {
+     $banned = TRUE;
+   }
+
+   return $banned;
+}
+
+/**
+ * Get IP information from Taobao API.
+ */
+function banip_ip_lookup($ip) {
+  $result = file_get_contents("http://ip.taobao.com/service/getIpInfo.php?ip={$ip}");
+
+  return json_decode($result);
+}
